@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.bulibucai.mapper.UserMapper">
+    <!-- BASCI CRUD -->
+
+    <select id="selectUser" resultType="user" databaseId="mysql">
+        select * from user where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!-- Oracle 数据库时执行下面这条语句 -->
+    <!--    <select id="selectUser" resultType="user" databaseId="oracle">-->
+    <!--        select * from emp where id = #{id,jdbcType=INTEGER}-->
+    <!--    </select>-->
+    <insert id="addUser">
+        insert into user(last_name, gender, email)
+        <!-- 直接引用对象的字段 -->
+        values(#{lastName}, #{gender}, #{email})
+    </insert>
+
+    <update id="updateUser">
+        update user set last_name=#{lastName}, gender=#{gender}, email=#{email} where id=#{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from user where id=#{id}
+    </delete>
+
+    <!-- 插入，同时获取主键 -->
+    <insert id="addUserAndGetId" useGeneratedKeys="true" keyProperty="id">
+        insert into user(last_name, gender, email)
+        values(#{lastName}, #{gender}, #{email})
+    </insert>
+
+    <!-- 多个参数 -->
+    <select id="selectByIdAndLastName" resultType="user">
+        select * from user where id=#{param1} and last_name=#{param2}
+    </select>
+    <select id="selectByIdAndLastNameUsingParamAnn" resultType="user">
+        select * from user where id=#{id} and last_name=#{lastName}
+    </select>
+    <select id="selectByIdAndNameUsingMap" resultType="user">
+        select * from user where id=#{id, jdbcType=INTEGER} and last_name=#{lastName, jdbcType=VARCHAR}
+    </select>
+    <select id="selectByIds" resultType="user">
+        <!-- 获取 List 的第一个元素作为参数 -->
+        select * from user where id=#{list[0]}
+    </select>
+
+    <!-- 不同的返回值 -->
+    <select id="selectByName" resultType="user">
+        select * from user where last_name like #{lastName}
+    </select>
+    <select id="selectByIdReturnMap" resultType="map">
+        select * from user where id=#{id}
+    </select>
+    <select id="selectByNameReturnMap" resultType="user">
+        select * from user where last_name like #{lastName}
+    </select>
+</mapper>

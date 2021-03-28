@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.bulibucai.mapper.EmployeeMapper">
+    <!-- 使用级联属性的方式处理 Dept -->
+    <resultMap id="empWithDept" type="site.bulibucai.entity.Employee">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="dept_id" property="dept.id"/>
+        <result column="dept_name" property="dept.name"/>
+    </resultMap>
+
+    <!-- 使用关联对象的方式处理 Dept -->
+    <resultMap id="empWithDeptUsingAsso" type="site.bulibucai.entity.Employee">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association property="dept" javaType="site.bulibucai.entity.Department">
+            <id column="dept_id" property="id"/>
+            <result column="dept_name" property="name"/>
+        </association>
+    </resultMap>
+
+    <!-- 使用分步查询 -->
+    <resultMap id="empWithDeptUsingAssoStep" type="site.bulibucai.entity.Employee">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association property="dept" select="site.bulibucai.mapper.DepartmentMapper.selectById"
+            column="dept_id">
+        </association>
+    </resultMap>
+
+    <select id="selectById" resultMap="empWithDept">
+        SELECT e.id id, e.name name, d.id dept_id, d.name dept_name
+        FROM employee e, department d
+        WHERE e.dept_id = d.id AND e.id = #{id}
+    </select>
+
+    <select id="selectById2" resultMap="empWithDeptUsingAsso">
+        SELECT e.id id, e.name name, d.id dept_id, d.name dept_name
+        FROM employee e, department d
+        WHERE e.dept_id = d.id AND e.id = #{id}
+    </select>
+
+    <select id="selectById3" resultMap="empWithDeptUsingAssoStep">
+        SELECT id, name, dept_id FROM employee WHERE id=#{id}
+    </select>
+</mapper>

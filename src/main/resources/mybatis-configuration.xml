@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="db.properties"/>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 设置 MyBatis 对于 null 的映射处理 -->
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <!-- 开启延迟加载和属性按需加载 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <typeAliases>
+        <!-- 使用 package 实现批量别名 -->
+        <package name="site.bulibucai.entity"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"/>
+                <property name="url" value="${mysql.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 多数据库产商支持 -->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+    </databaseIdProvider>
+
+
+    <mappers>
+        <mapper resource="site/bulibucai/mapper/UserMapper.xml"/>
+        <mapper resource="site/bulibucai/mapper/EmployeeMapper.xml"/>
+        <mapper resource="site/bulibucai/mapper/DepartmentMapper.xml"/>
+    </mappers>
+</configuration>
